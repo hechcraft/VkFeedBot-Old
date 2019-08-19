@@ -1,17 +1,17 @@
 <?php
 
-namespace App\Posts\src;
+namespace App\Posts;
 
 class Friend implements PostType
 {
-    private $response;
-    private $text;
     private $TOKENVK = 'c524e7184a62f272331cacfe6807795c6442b90de9be1d3719d238840502fcef5e1df66dae681324e9484';
+    use HasText;
 
-    public function __construct($response, $text)
+    private $response;
+
+    public function __construct($response)
     {
-        $response->response = $response;
-        $text->text = $text;
+        $this->response = $response;
     }
 
     public function getMessage()

@@ -1,20 +1,21 @@
 <?php
 
-namespace App\Posts\src;
+namespace App\Posts;
 
 use BotMan\BotMan\Messages\Attachments\Image;
 use BotMan\BotMan\Messages\Outgoing\OutgoingMessage;
 
 class Link implements PostType
 {
-    private $response;
-    private $text;
+    use HasText;
 
-    public function __construct($response, $text)
+    private $response;
+
+    public function __construct($response)
     {
-        $response->response = $response;
-        $text->text = $text;
+        $this->response = $response;
     }
+
 
     private function getKey()
     {
@@ -34,7 +35,7 @@ class Link implements PostType
     {
         $data = data_get($this->response, 'response.items.0.attachments.0.link.photo.' . $this->getKey());
         $link = data_get($this->response, 'response.items.0.attachments.0.link.url');
-        $text = $this->text . "\n" . $link;
+        $text = $this->getText() . "\n" . $link;
         $attachment = new Image($data);
         return $message = OutgoingMessage::create($text)
             ->withAttachment($attachment);

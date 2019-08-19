@@ -1,27 +1,28 @@
 <?php
 
-namespace App\Posts\src;
+namespace App\Posts;
 
 use BotMan\BotMan\Messages\Attachments\Image;
 use BotMan\BotMan\Messages\Outgoing\OutgoingMessage;
 
 class WallPhoto implements PostType
 {
-    private $response;
-    private $text;
+    use HasText;
 
-    public function __construct($response, $text)
+    private $response;
+
+    public function __construct($response)
     {
-        $response->response = $response;
-        $text->text = $text;
+        $this->response = $response;
     }
+
 
     public function getMessage()
     {
         $data = data_get($this->response, 'response.items.0.photos.items.0.photo_604');
         $attachment = new Image($data);
-        $text = $this->text . ' добавил изображения...';
-        return $message = OutgoingMessage::create($text)
+        $text = $this->getText() . ' добавил изображения...';
+        return $message = OutgoingMessage::create($text())
             ->withAttachment($attachment);
 
     }

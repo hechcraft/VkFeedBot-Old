@@ -1,22 +1,22 @@
 <?php
 
-namespace App\Posts\src;
+namespace App\Posts;
 
 use BotMan\BotMan\Messages\Attachments\Image;
 use BotMan\BotMan\Messages\Outgoing\OutgoingMessage;
 
 class Photo implements PostType
 {
+    use HasText;
+
 	private $response;
-	private $text;
 
-	public function __construct($response, $text)
-	{
-		$this->response = $response;
-		$this->text = $text;
-	}
+	public function __construct($response)
+    {
+        $this->response = $response;
+    }
 
-	private function getKey()
+    private function getKey()
     {
         $requestPhoto = data_get($this->response, 'response.items.0.attachments.0.photo');
         $keysArrPhoto = array_keys((array)$requestPhoto);
@@ -34,7 +34,7 @@ class Photo implements PostType
 	{
 	    $data = data_get($this->response, 'response.items.0.attachments.0.photo.' . $this->getKey());
 	    $attachment = new Image($data);
-	    return $message = OutgoingMessage::create($this->text)
+	    return $message = OutgoingMessage::create($this->getText())
 	        ->withAttachment($attachment);	
 	}
 }
