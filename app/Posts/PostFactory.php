@@ -6,6 +6,7 @@ class PostFactory
 {
     public static function make($response)
     {
+
         $globalType = data_get($response, 'response.items.0.attachments');
 
         if (is_null($globalType)) {
@@ -33,7 +34,7 @@ class PostFactory
             case 'post':
                 return new Post($response);
             default:
-                throw new \RuntimeException('Invalid post type');
+                throw new RuntimeException('Invalid post type');
         }
     }
 }

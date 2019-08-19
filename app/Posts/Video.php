@@ -7,8 +7,6 @@ use BotMan\BotMan\Messages\Outgoing\OutgoingMessage;
 
 class Video extends VKPost
 {
-    protected $response;
-
     private function getKey()
     {
         $requestVideo = data_get($this->response, 'response.items.0.attachments.0.video');

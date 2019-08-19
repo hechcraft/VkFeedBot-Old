@@ -14,6 +14,11 @@ return [
     |
     */
 
+    'vk' => [
+        'token' => env('VK_TOKEN'),
+        'url' => 'https://api.vk.com/method/newsfeed.get?&filters=posts&count=5&return_banned=0&v=5.52&access_token='
+    ],
+
     'mailgun' => [
         'domain' => env('MAILGUN_DOMAIN'),
         'secret' => env('MAILGUN_SECRET'),

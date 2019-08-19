@@ -7,8 +7,6 @@ use BotMan\BotMan\Messages\Outgoing\OutgoingMessage;
 
 class WallPhoto extends VKPost
 {
-    protected $response;
-
     public function getMessage()
     {
         $data = data_get($this->response, 'response.items.0.photos.items.0.photo_604');

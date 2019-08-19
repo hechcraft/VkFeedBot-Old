@@ -7,8 +7,6 @@ use BotMan\BotMan\Messages\Outgoing\OutgoingMessage;
 
 class Doc extends VKPost
 {
-    protected $response;
-
     public function getMessage()
     {
         $data = data_get($this->response, 'response.items.0.attachments.0.doc.url');
