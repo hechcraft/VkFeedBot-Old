@@ -8,7 +8,6 @@ $botman = resolve('botman');
 $TOKENVK = 'c524e7184a62f272331cacfe6807795c6442b90de9be1d3719d238840502fcef5e1df66dae681324e9484';
 $URL = 'https://api.vk.com/method/newsfeed.get?&filters=posts&count=5&return_banned=0&v=5.52&access_token=';
 $urlTok = $URL . $TOKENVK;
-$botman = resolve('botman');
 
 $response = json_decode(file_get_contents($urlTok));
 $text = data_get($response, 'response.items.0.text');

@@ -9,7 +9,7 @@ class Point implements PostType
 {
     use HasText;
 
-    private $response;
+    protected $response;
 
     public function __construct($response)
     {

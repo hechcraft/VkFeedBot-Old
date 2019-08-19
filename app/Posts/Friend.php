@@ -5,9 +5,7 @@ namespace App\Posts;
 class Friend implements PostType
 {
     private $TOKENVK = 'c524e7184a62f272331cacfe6807795c6442b90de9be1d3719d238840502fcef5e1df66dae681324e9484';
-    use HasText;
-
-    private $response;
+    protected $response;
 
     public function __construct($response)
     {
