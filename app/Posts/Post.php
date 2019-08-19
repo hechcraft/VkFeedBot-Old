@@ -6,6 +6,6 @@ class Post extends VKPost
 {
     public function getMessage()
     {
-        return $message = $this->getText();
+        return $this->getText();
     }
 }

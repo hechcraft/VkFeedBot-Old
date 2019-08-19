@@ -6,6 +6,11 @@ class VKPost
 {
     protected $response;
 
+    public function __construct($response)
+    {
+        $this->response = $response;
+    }
+
     public function getText()
     {
         $text = data_get($this->response, 'response.items.0.text');

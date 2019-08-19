@@ -9,11 +9,6 @@ class Photo extends VKPost
 {
 	protected $response;
 
-	public function __construct($response)
-    {
-        $this->response = $response;
-    }
-
     private function getKey()
     {
         $requestPhoto = data_get($this->response, 'response.items.0.attachments.0.photo');
@@ -32,7 +27,7 @@ class Photo extends VKPost
 	{
 	    $data = data_get($this->response, 'response.items.0.attachments.0.photo.' . $this->getKey());
 	    $attachment = new Image($data);
-	    return $message = OutgoingMessage::create($this->getText())
+	    return OutgoingMessage::create($this->getText())
 	        ->withAttachment($attachment);	
 	}
 }

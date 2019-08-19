@@ -9,16 +9,11 @@ class Doc extends VKPost
 {
     protected $response;
 
-    public function __construct($response)
-    {
-        $this->response = $response;
-    }
-
     public function getMessage()
     {
         $data = data_get($this->response, 'response.items.0.attachments.0.doc.url');
         $attachment = new File($data);
-        return $message = OutgoingMessage::create($this->getText())
+        return OutgoingMessage::create($this->getText())
             ->withAttachment($attachment);
     }
 }

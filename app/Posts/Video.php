@@ -9,12 +9,6 @@ class Video extends VKPost
 {
     protected $response;
 
-    public function __construct($response)
-    {
-        $this->response = $response;
-    }
-
-
     private function getKey()
     {
         $requestVideo = data_get($this->response, 'response.items.0.attachments.0.video');
