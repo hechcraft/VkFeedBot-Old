@@ -1,13 +1,12 @@
 <?php
 
-namespace App\Posts\src;
+namespace App\Posts;
 
 class PostFactory
 {
-    public static function make($response, $text): PostType
+    public static function make($response)
     {
         $globalType = data_get($response, 'response.items.0.attachments');
-
         if (is_null($globalType)) {
             $type = data_get($response, 'response.items.0.type');
         } else {
@@ -15,23 +14,23 @@ class PostFactory
         }
         switch ($type) {
             case 'video':
-                return new Video($response, $text);
+                return new Video($response);
             case 'photo':
-                return new Photo($response, $text);
+                return new Photo($response);
             case 'audio':
-                return new Audio($response, $text);
+                return new Audio($response);
             case 'point':
-                return new Point($response, $text);
+                return new Point($response);
             case 'doc':
-                return new Doc($response, $text);
+                return new Doc($response);
             case 'link':
-                return new Link($response, $text);
+                return new Link($response);
             case 'wall_photo':
-                return new WallPhoto($response, $text);
+                return new WallPhoto($response);
             case 'friend':
-                return new Friend($response, $text);
+                return new Friend($response);
             case 'post':
-                return new Post($response,$text);
+                return new Post($response);
             default:
                 throw new \RuntimeException('Invalid post type');
         }
