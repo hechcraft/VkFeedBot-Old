@@ -2,10 +2,8 @@
 
 namespace App\Posts;
 
-class Post implements PostType
+class Post extends VKPost
 {
-    use HasText;
-
     public function getMessage()
     {
         return $message = $this->getText();

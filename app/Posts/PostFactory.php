@@ -4,7 +4,7 @@ namespace App\Posts;
 
 class PostFactory
 {
-    public static function make($response): PostType
+    public static function make($response)
     {
         $globalType = data_get($response, 'response.items.0.attachments');
 

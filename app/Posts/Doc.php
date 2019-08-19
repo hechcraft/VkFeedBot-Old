@@ -5,10 +5,8 @@ namespace App\Posts;
 use BotMan\BotMan\Messages\Attachments\File;
 use BotMan\BotMan\Messages\Outgoing\OutgoingMessage;
 
-class Doc implements PostType
+class Doc extends VKPost
 {
-    use HasText;
-
     protected $response;
 
     public function __construct($response)

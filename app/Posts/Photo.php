@@ -5,10 +5,8 @@ namespace App\Posts;
 use BotMan\BotMan\Messages\Attachments\Image;
 use BotMan\BotMan\Messages\Outgoing\OutgoingMessage;
 
-class Photo implements PostType
+class Photo extends VKPost
 {
-    use HasText;
-
 	protected $response;
 
 	public function __construct($response)

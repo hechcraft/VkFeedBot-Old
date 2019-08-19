@@ -2,7 +2,7 @@
 
 namespace App\Posts;
 
-class Audio implements PostType
+class Audio extends VKPost
 {
 
     public function getMessage()

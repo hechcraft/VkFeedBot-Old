@@ -2,14 +2,9 @@
 
 namespace App\Posts;
 
-trait HasText
+class VKPost
 {
-    private $response;
-
-    public function __construct($response)
-    {
-        $this->response = $response;
-    }
+    protected $response;
 
     public function getText()
     {

@@ -5,10 +5,8 @@ namespace App\Posts;
 use BotMan\BotMan\Messages\Attachments\Location;
 use BotMan\BotMan\Messages\Outgoing\OutgoingMessage;
 
-class Point implements PostType
+class Point extends VKPost
 {
-    use HasText;
-
     protected $response;
 
     public function __construct($response)
