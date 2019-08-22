@@ -8,7 +8,6 @@ class PostFactory
     {
 
         $globalType = data_get($response, 'response.items.0.attachments');
-
         if (is_null($globalType)) {
             $type = data_get($response, 'response.items.0.type');
         } else {
@@ -34,7 +33,7 @@ class PostFactory
             case 'post':
                 return new Post($response);
             default:
-                throw new RuntimeException('Invalid post type');
+                throw new \RuntimeException('Invalid post type');
         }
     }
 }

@@ -9,6 +9,8 @@ $response = json_decode(file_get_contents($urlTok));
 $factory = PostFactory::make($response);
 $message = $factory->getMessage();
 
+
+
 $botman->hears('/help', function ($bot) use ($message) {
     $bot->reply($message);
 });

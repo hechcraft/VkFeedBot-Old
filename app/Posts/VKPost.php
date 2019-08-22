@@ -11,10 +11,8 @@ class VKPost
         $this->response = $response;
     }
 
-    public function getText()
+    public function getText($text)
     {
-        $text = data_get($this->response, 'response.items.0.text');
-
         //ид из поста
         $idPost = data_get($this->response, 'response.items.0.source_id');
         $idPost = $idPost * -1;
@@ -44,4 +42,18 @@ class VKPost
 
         return $text;
     }
+
+    public function getKey($request, $type)
+    {
+        $photoKeys = array_keys((array)$request);
+        $photos = [];
+        for ($i = 0; $i < count($photoKeys); $i++) {
+            $photos[$i] = strstr($photoKeys[$i], $type);
+            if ($photos[$i] == false) {
+                unset($photos[$i]);
+            }
+        }
+        return end($photos);
+    }
+
 }
