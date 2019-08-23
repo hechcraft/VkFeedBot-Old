@@ -43,12 +43,12 @@ class VKPost
         return $text;
     }
 
-    public function getKey($request, $type)
+    public function getKey($request)
     {
         $photoKeys = array_keys((array)$request);
         $photos = [];
         for ($i = 0; $i < count($photoKeys); $i++) {
-            $photos[$i] = strstr($photoKeys[$i], $type);
+            $photos[$i] = strstr($photoKeys[$i], 'photo');
             if ($photos[$i] == false) {
                 unset($photos[$i]);
             }

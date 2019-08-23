@@ -9,11 +9,13 @@ class WallPhoto extends VKPost
 {
     public function getMessage()
     {
-        $data = data_get($this->response, 'response.items.0.photos.items.0.photo_604');
+        $text = data_get($this->response, 'response.items.0.text');
+        $requestPhoto = data_get($this->response, 'response.items.0.photos.items.0');
+        $data = data_get($this->response, 'response.items.0.photos.items.0.'
+            . $this->getKey($requestPhoto));
         $attachment = new Image($data);
-        $text = $this->getText() . ' добавил изображения...';
-        return OutgoingMessage::create($text())
+        $text = $this->getText($text) . ' добавил изображения...';
+        return OutgoingMessage::create($text)
             ->withAttachment($attachment);
-
     }
 }

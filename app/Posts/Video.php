@@ -12,7 +12,7 @@ class Video extends VKPost
         $text = data_get($this->response, 'response.items.0.text');
         $requestVideo = data_get($this->response, 'response.items.0.attachments.0.video');
         $data = data_get($this->response, 'response.items.0.attachments.0.video.'
-            . $this->getKey($requestVideo, 'video'));
+            . $this->getKey($requestVideo));
         $idVideo = data_get($this->response, 'response.items.0.attachments.0.video.id');
         $ownerIdVideo = data_get($this->response, 'response.items.0.attachments.0.video.owner_id');
         $videoUrl = 'https://vk.com/video' . $ownerIdVideo . '_' . $idVideo;

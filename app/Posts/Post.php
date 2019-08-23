@@ -11,12 +11,12 @@ class Post extends VKPost
     {
         $text = data_get($this->response, 'response.items.0.copy_history.0.text');
         $postType = data_get($this->response, 'response.items.0.copy_history.0.attachments.0.type');
-        if (is_null($postType)){
-            return $this->getText();
-        } elseif ($postType == 'video'){
+        if (is_null($postType)) {
+            return $this->getText($text);
+        } elseif ($postType == 'video') {
             $requestVideo = data_get($this->response, 'response.items.0.copy_history.0.attachments.0.video');
             $data = data_get($this->response, 'response.items.0.copy_history.0.attachments.0.video.' .
-                $this->getKey($requestVideo, 'video'));
+                $this->getKey($requestVideo));
             $idVideo = data_get($this->response, 'response.items.0.copy_history.0.attachments.0.video.id');
             $ownerIdVideo = data_get($this->response, 'response.items.0.copy_history.0.attachments.0.video.owner_id');
             $videoUrl = 'https://vk.com/video' . $ownerIdVideo . '_' . $idVideo;
@@ -24,14 +24,13 @@ class Post extends VKPost
             $attachment = new Image($data);
             return OutgoingMessage::create($text)
                 ->withAttachment($attachment);
-        } elseif ($postType == 'photo'){
+        } elseif ($postType == 'photo') {
             $requestPhoto = data_get($this->response, 'response.items.0.copy_history.0.attachments.0.photo');
             $data = data_get($this->response, 'response.items.0.copy_history.0.attachments.0.photo.' .
-                $this->getKey($requestPhoto,'photo'));
+                $this->getKey($requestPhoto));
             $attachment = new Image($data);
             return OutgoingMessage::create($this->getText($text))
                 ->withAttachment($attachment);
         }
-
     }
 }

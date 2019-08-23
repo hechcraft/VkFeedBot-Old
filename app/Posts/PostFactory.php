@@ -6,7 +6,6 @@ class PostFactory
 {
     public static function make($response)
     {
-
         $globalType = data_get($response, 'response.items.0.attachments');
         if (is_null($globalType)) {
             $type = data_get($response, 'response.items.0.type');
