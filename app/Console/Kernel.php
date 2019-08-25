@@ -2,6 +2,11 @@
 
 namespace App\Console;
 
+<<<<<<< HEAD
+use App\Jobs\BotPost;
+=======
+use App\Jobs\HelloJob;
+>>>>>>> 8b01fdf... Царский подгон
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -24,8 +29,14 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-         $schedule->command('inspire')
+        $schedule->command('inspire')
                   ->hourly();
+
+<<<<<<< HEAD
+        $schedule->job(new BotPost)->everyMinute();
+=======
+         $schedule->job(new HelloJob)->everyMinute();
+>>>>>>> 8b01fdf... Царский подгон
     }
 
     /**
