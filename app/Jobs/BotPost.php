@@ -2,33 +2,21 @@
 
 namespace App\Jobs;
 
-use Illuminate\Bus\Queueable;
+use BotMan\Drivers\Telegram\TelegramDriver;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 
-class BotPost implements ShouldQueue
+class BotPost
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
-
-    /**
-     * Create a new job instance.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        //
-    }
+    use Dispatchable,SerializesModels;
 
     /**
      * Execute the job.
      *
      * @return void
      */
-    public function handle($schedule)
+    public function handle()
     {
-
+        resolve('botman')->say('Hello', '121010156', TelegramDriver::class);
     }
 }
