@@ -25,12 +25,16 @@ Route::get('/success', function () {
         return view('redirect');
     }
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 4cbee79... 4
     $code = request()->get('access_token');
     $expiresIn = request()->get('expires_in');
     $userId = request()->get('user_id');
     var_dump($code, $expiresIn, $userId);
     resolve('botman')->say('Authorized user ' . $userId, 121010156, TelegramDriver::class);
 });
+<<<<<<< HEAD
 =======
 
     $code = request()->get('access_token');
@@ -42,3 +46,5 @@ Route::get('/success', function () {
     resolve('botman')->say('Authorized user ' . $userId, 77434259, TelegramDriver::class);
 });
 >>>>>>> 8b01fdf... Царский подгон
+=======
+>>>>>>> 4cbee79... 4
