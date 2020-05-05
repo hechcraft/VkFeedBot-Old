@@ -2,17 +2,28 @@
 
 namespace App\Posts;
 
-use BotMan\BotMan\Messages\Attachments\File;
-use BotMan\BotMan\Messages\Outgoing\OutgoingMessage;
+use App\Services\Message;
 
 class Doc extends VKPost
 {
     public function getMessage()
     {
-        $text = data_get($this->response, 'response.items.0.text');
-        $data = data_get($this->response, 'response.items.0.attachments.0.doc.url');
-        $attachment = new File($data);
-        return OutgoingMessage::create($this->getText($text))
-            ->withAttachment($attachment);
+        $message = new Message();
+        $amountDoc = 1;
+
+        $ownerDoc = "Добавил файл: " . $this->getText($this->getPathText($this->postCount));
+
+        $message->addText($ownerDoc)
+            ->addText($this->getDocTitle($this->postCount) . ':')
+            ->addText($this->getDocUrl($this->postCount));
+
+        while (!is_null($this->getPath("attachments.$amountDoc.doc.url", $this->postCount))) {
+            $message->addText($this->getDocTitle($this->postCount) . ':')
+                ->addText($this->getDocUrl($this->postCount));
+            $amountDoc++;
+        };
+
+        return $message->getOutgoingMessage();
     }
 }
+

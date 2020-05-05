@@ -20,13 +20,16 @@ Route::get('/', function () {
 Route::match(['get', 'post'], '/botman', 'BotManController@handle');
 Route::get('/botman/tinker', 'BotManController@tinker');
 
-Route::get('/success', function () {
-    if (!str_contains(request()->fullUrl(), 'redirected')) {
-        return view('redirect');
-    }
-    $code = request()->get('access_token');
-    $expiresIn = request()->get('expires_in');
-    $userId = request()->get('user_id');
-    var_dump($code, $expiresIn, $userId);
-    resolve('botman')->say('Authorized user ' . $userId, 121010156, TelegramDriver::class);
-});
+Route::get('/success', 'VkController@store');
+
+
+//Route::get('/success',function () {
+//    if (!str_contains(request()->fullUrl(), 'redirected')) {
+//        return view('redirect');
+//    }
+//    $code = request()->get('access_token');
+//    $expiresIn = request()->get('expires_in');
+//    $userId = request()->get('user_id');
+//    var_dump($code, $expiresIn, $userId);
+//    resolve('botman')->say('Authorized user ' . $userId, 121010156, TelegramDriver::class);
+//});

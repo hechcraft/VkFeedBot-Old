@@ -11,6 +11,7 @@
     "type": "project",
     "require": {
         "php": "^7.1.3",
+      "ext-json": "*",
         "botman/botman": "~2.0",
         "botman/driver-telegram": "^1.5",
         "botman/driver-web": "~1.0",
@@ -18,8 +19,7 @@
         "botman/tinker": "~1.0",
         "fideloper/proxy": "^4.0",
         "laravel/framework": "5.7.*",
-        "laravel/tinker": "^1.0",
-      "ext-json": "*"
+      "laravel/tinker": "^1.0"
     },
     "require-dev": {
         "beyondcode/laravel-dump-server": "^1.0",
@@ -66,7 +66,8 @@
         ],
         "post-autoload-dump": [
             "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
-            "@php artisan package:discover"
+          "@php artisan package:discover",
+          "cp -fr vendor_fixes/TelegramDriver.php vendor/botman/driver-telegram/src/TelegramDriver.php"
         ]
     },
     "config": {
