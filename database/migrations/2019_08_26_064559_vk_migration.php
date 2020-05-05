@@ -13,12 +13,13 @@ class VkMigration extends Migration
      */
     public function up()
     {
-        Schema::create('VkData', function (Blueprint $table) {
+        Schema::create('vk_oauth', function (Blueprint $table) {
             $table->bigIncrements('id');
-
-            $table->string('VkToken');
-            $table->string('VkId');
-            $table->string('TelegramId');
+            $table->string('vk_token');
+            $table->string('vk_id');
+            $table->string('telegram_id');
+            $table->string('last_post_id')->default('0');
+            $table->unique(['vk_id', 'telegram_id', 'last_post_id']);
         });
     }
 
@@ -29,6 +30,6 @@ class VkMigration extends Migration
      */
     public function down()
     {
-        //
+        Schema::dropIfExists('vk_oauth');
     }
 }

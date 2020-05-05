@@ -2,35 +2,60 @@
 
 namespace App\Posts;
 
+use App\Services\Message;
 use BotMan\BotMan\Messages\Attachments\Image;
+use BotMan\BotMan\Messages\Attachments\Location;
 use BotMan\BotMan\Messages\Outgoing\OutgoingMessage;
+use Illuminate\Support\Facades\Log;
 
 class Post extends VKPost
 {
     public function getMessage()
     {
-        $text = data_get($this->response, 'response.items.0.copy_history.0.text');
-        $postType = data_get($this->response, 'response.items.0.copy_history.0.attachments.0.type');
-        if (is_null($postType)) {
-            return $this->getText($text);
-        } elseif ($postType == 'video') {
-            $requestVideo = data_get($this->response, 'response.items.0.copy_history.0.attachments.0.video');
-            $data = data_get($this->response, 'response.items.0.copy_history.0.attachments.0.video.' .
-                $this->getKey($requestVideo));
-            $idVideo = data_get($this->response, 'response.items.0.copy_history.0.attachments.0.video.id');
-            $ownerIdVideo = data_get($this->response, 'response.items.0.copy_history.0.attachments.0.video.owner_id');
-            $videoUrl = 'https://vk.com/video' . $ownerIdVideo . '_' . $idVideo;
-            $text = $this->getText($text) . "\n" . $videoUrl;
-            $attachment = new Image($data);
-            return OutgoingMessage::create($text)
-                ->withAttachment($attachment);
-        } elseif ($postType == 'photo') {
-            $requestPhoto = data_get($this->response, 'response.items.0.copy_history.0.attachments.0.photo');
-            $data = data_get($this->response, 'response.items.0.copy_history.0.attachments.0.photo.' .
-                $this->getKey($requestPhoto));
-            $attachment = new Image($data);
-            return OutgoingMessage::create($this->getText($text))
-                ->withAttachment($attachment);
+        $botman = resolve('botman');
+
+        $text = $this->getText($this->getPathText($this->postCount));
+        $postType = $this->getPostType($this->postCount);
+        if (is_null($postType) || is_null($this->getPath('geo.type', $this->postCount))) {
+            $postType = 'post';
+        } else {
+            $postType = 'geo';
         }
+        $message = new Message;
+        $messages = collect([]);
+        switch ($postType) {
+            case 'video':
+                $videoUrl = "https://vk.com/video{$this->getOwnerVideo($this->postCount)}_{$this->getVideoId($this->postCount)}";
+                $text .= "\n" . $videoUrl;
+
+                $message->withCaption($text)
+                    ->withImage($this->getAttachments('video'));
+                break;
+            case 'photo':
+                $messages->push(new Photo($this->response, $this->item, $this->postCount));
+//                $message
+//                    ->withCaption($text)
+//                    ->withImage($this->getAttachments('photo'));
+                break;
+            case 'doc':
+                $message->addText($this->getPathText($this->postCount))
+                    ->addText($this->getDocTitle($this->postCount))
+                    ->addText('')
+                    ->addText($this->getDocUrl($this->postCount));
+                break;
+            case 'geo':
+                $coordArr = explode(' ', $this->getGeoCoordinates($this->postCount));
+                $botman->reply($this->getText($this->getPathText($this->postCount)));
+                return OutgoingMessage::create()->withAttachment(new Location($coordArr[0], $coordArr[1]));
+                break;
+            case 'post':
+                $message->withCaption($text);
+                break;
+            default:
+                $message->withText($text);
+                break;
+        }
+
+        return $message->getOutgoingMessage();
     }
 }
