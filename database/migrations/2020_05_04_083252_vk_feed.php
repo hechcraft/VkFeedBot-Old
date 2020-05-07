@@ -17,6 +17,7 @@ class VkFeed extends Migration
             $table->bigIncrements('id');
             $table->string('telegram_id');
             $table->json('post_json');
+            $table->string('md5_hash_post');
         });
     }
 

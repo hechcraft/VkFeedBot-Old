@@ -12,6 +12,7 @@ class VkFeed extends Model
 
     protected $fillable = [
         'telegram_id',
-        'post_json'
+        'post_json',
+        'md5_hash_post'
     ];
 }

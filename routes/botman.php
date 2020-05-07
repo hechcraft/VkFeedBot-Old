@@ -56,15 +56,15 @@ $botman->hears('/help', function ($bot) {
         }
 
 //        \Log::info(print_r($item, true));
-        $postJson = json_encode($item);
-        app('App\Http\Controllers\FeedController')->store($bot, $postJson);
+//        $postJson = json_encode($item);
+        app('App\Http\Controllers\FeedController')->store($bot, $item);
     }
 
     $md5Date = data_get($response, 'response.items.0.date');
     $md5Text = data_get($response, 'response.items.0.text');
-    $md5tring = md5($md5Date . $md5Text);
+    $md5String = md5($md5Date . $md5Text);
 
-//    if ($md5tring == $vkData->last_post_id)
+//    if ($md5String == $vkData->last_post_id)
 //    {
 //        exit();
 //    }
@@ -82,7 +82,7 @@ $botman->hears('/help', function ($bot) {
     });
 
     DB::table('vk_oauth')->where('telegram_id', $bot->getUser()->getId())
-        ->update(['last_post_id' => $md5tring]);
+        ->update(['last_post_id' => $md5String]);
 
 });
 
