@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\VkFeed;
+use App\VkGroupName;
+use App\VkUserName;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use phpDocumentor\Reflection\Types\Null_;
@@ -17,11 +19,33 @@ class FeedController extends Controller
         $data->save();
     }
 
+    public function profilesStore($bot, $response)
+    {
+        $groupsData = data_get($response, 'response.groups');
+        foreach ($groupsData as $item) {
+            $groupNameData = new VkGroupName;
+            $groupNameData->telegram_id = $bot->getUser()->getId();
+            $groupNameData->vk_id_group = $item->id;
+            $groupNameData->vk_group_name = $item->name;
+//            $groupNameData->save();
+        }
+
+
+        $usersData = data_get($response, 'response.profiles');
+        foreach ($usersData as $item) {
+            $userNameData = new VkUserName;
+            $userNameData->telegram_id = $bot->getUser()->getId();
+            $userNameData->vk_id_user = $item->id;
+            $userNameData->vk_name_user = $item->first_name . ' ' . $item->last_name;
+//            $userNameData->save();
+        }
+    }
 
     public function store($bot, $item)
     {
         $data = new VkFeed;
         $data->telegram_id = $bot->getUser()->getId();
+
 
         $md5Date = $item->date;
         if (isset($item->text)) {
@@ -46,13 +70,5 @@ class FeedController extends Controller
         }
 
 //        $this->saveData($data, $postJson, $md5String);
-
-
-        $test = DB::table('vk_feed')->select('post_json')
-            ->where('telegram_id', $bot->getUser()->getId())->get();
-        foreach ($test as $item) {
-            $jsonTest = json_decode($item->post_json);
-            \Log::info(print_r($jsonTest->date, true));
-        }
     }
 }

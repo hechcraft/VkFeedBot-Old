@@ -30,13 +30,15 @@ class Message
      * @param string $caption
      * @return $this
      */
-    public function withCaption($caption)
+    public function withCaption($caption, $url)
     {
-        $this->outgoingMessage->text(str_limit($caption, 1020));
-
+        if (strlen($caption) > 1000) {
+            $caption = str_limit($caption, 850);
+            $caption .= "\n" . $url;
+        }
+        $this->outgoingMessage->text($caption);
         return $this;
     }
-
     /**
      * @param array $images
      * @return $this
