@@ -1,6 +1,6 @@
 <?php
 
-use App\Posts\PostFactory;
+use App\Post\PostFactory;
 Use App\VkPost;
 use BotMan\BotMan\Messages\Attachments\Location;
 use BotMan\BotMan\Messages\Outgoing\OutgoingMessage;
@@ -24,6 +24,7 @@ $botman->hears('/help', function ($bot) {
     $urlTok = config('services.vk.url') . $vkData->vk_token;
     $response = json_decode(file_get_contents($urlTok));
 
+    app('App\Http\Controllers\FeedController')->profilesStore($bot, $response);
 
     foreach (data_get($response, 'response.items') as $item) {
         $globalType = data_get($item, 'attachments');
@@ -35,12 +36,8 @@ $botman->hears('/help', function ($bot) {
         } else {
             $type = data_get($item, 'attachments.0.type');
         }
-
-//        \Log::info(print_r($item, true));
-//        $postJson = json_encode($item);
         app('App\Http\Controllers\FeedController')->store($bot, $item);
     }
-
     $md5Date = data_get($response, 'response.items.0.date');
     $md5Text = data_get($response, 'response.items.0.text');
     $md5String = md5($md5Date . $md5Text);
@@ -50,7 +47,7 @@ $botman->hears('/help', function ($bot) {
 //        exit();
 //    }
 
-    $messages = PostFactory::make($response);
+    $messages = PostFactory::make($bot);
 
     $messages->each(function ($message) use ($vkData, $bot) {
         $message = $message->getMessage();
@@ -65,6 +62,8 @@ $botman->hears('/help', function ($bot) {
     DB::table('vk_oauth')->where('telegram_id', $bot->getUser()->getId())
         ->update(['last_post_id' => $md5String]);
 
+//    DB::table('vk_user_name')->where('telegram_id', $bot->getUser()->getId())->delete();
+//    DB::table('vk_group_name')->where('telegram_id', $bot->getUser()->getId())->delete();
 });
 
 $botman->hears('Url {stringUrl}', 'App\Http\Controllers\VkController@store');
