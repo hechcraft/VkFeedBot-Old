@@ -4,6 +4,8 @@
 namespace App\Post;
 
 
+use App\VkGroupName;
+use App\VkUserName;
 use Illuminate\Support\Facades\DB;
 
 class VkPost
@@ -22,10 +24,10 @@ class VkPost
         if ($idPost < 0) {
             $idPost *= -1;
         }
-        $groupsData = DB::table('vk_group_name')->select('vk_id_group', 'vk_group_name')
+        $groupsData = VkGroupName::select('vk_id_group', 'vk_group_name')
             ->where('telegram_id', $this->telegramId)->get();
 
-        $profilesData = DB::table('vk_user_name')->select('vk_id_user', 'vk_name_user')
+        $profilesData = VkUserName::select('vk_id_user', 'vk_name_user')
             ->where('telegram_id', $this->telegramId)->get();
 
         foreach ($groupsData as $group) {

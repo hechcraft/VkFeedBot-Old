@@ -4,6 +4,11 @@ namespace App\Console;
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+use App\Console\Commands\FetchPosts;
+use App\Console\Commands\SendPosts;
+>>>>>>> 7325e42... WIP
 use App\Jobs\BotPost;
 =======
 use App\Jobs\HelloJob;
@@ -22,7 +27,8 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-        //
+        FetchPosts::class,
+        SendPosts::class,
     ];
 
     /**
@@ -33,6 +39,7 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
+<<<<<<< HEAD
         $schedule->command('inspire')
                   ->hourly();
 
@@ -46,6 +53,10 @@ class Kernel extends ConsoleKernel
         $schedule->job(new BotPost)->everyMinute();
 
 >>>>>>> 4cbee79... 4
+=======
+        $schedule->command('posts:fetch')->everyMinute();
+        $schedule->command('posts:send')->everyMinute();
+>>>>>>> 7325e42... WIP
     }
 
     /**

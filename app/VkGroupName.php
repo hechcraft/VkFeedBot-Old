@@ -11,7 +11,7 @@ class VkGroupName extends Model
     public $timestamps = false;
 
     protected $fillable = [
-        'vk_group_user',
+        'vk_group_name',
         'vk_id_group',
         'telegram_id'
     ];

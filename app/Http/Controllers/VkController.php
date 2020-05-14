@@ -2,7 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\VkPost;
+use App\Services\Message;
+use App\VkFeed;
+use App\VkGroupName;
+use App\VkOauth;
+use App\VkUserName;
 use BotMan\Drivers\Telegram\TelegramDriver;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -22,13 +26,12 @@ class VkController extends Controller
         );
     }
 
-    //сохранение в бд
     public function store($bot, $stringUrl)
     {
-        $data = new VkPost;
+        $data = new VkOauth;
         $data->telegram_id = $bot->getUser()->getId();
         parse_str($stringUrl, $parseUrl);
-        $vkData = DB::table('vk_oauth')->select('vk_id', 'telegram_id')
+        $vkData = VkOauth::select('vk_id', 'telegram_id')
             ->where('telegram_id', $bot->getUser()->getId())->first();
         if (!isset($parseUrl['user_id'])) {
             $parseUrl['user_id'] = null;
@@ -56,28 +59,14 @@ class VkController extends Controller
             . $lastName . ', вы успешно авторизованы';
 
         resolve('botman')->reply($message);
-        //        resolve('botman')->say('Authorized user ' . $bot->getUser()->getId(), TelegramDriver::class);
     }
 
     public function delete($bot)
     {
-        DB::table('vk_oauth')->where('telegram_id', $bot->getUser()->getId())->delete();
+        VkOauth::where('telegram_id', $bot->getUser()->getId())->delete();
+        VkFeed::where('telegram_id', $bot->getUser()->getId())->delete();
+        VkGroupName::where('telegram_id', $bot->getUser()->getId())->delete();
+        VkUserName::where('telegram_id', $bot->getUser()->getId())->delete();
+        $bot->reply('Ваши данные успешно удалены');
     }
-//    public function store(Request $request)
-//    {
-//        $value = \request()->session()->get('telegramId');
-//        \Log::error($value);
-//        if (!str_contains(request()->fullUrl(), 'redirected')) {
-//            return view('redirect');
-//        }
-//        $code = request()->get('access_token');
-//        $expiresIn = request()->get('expires_in');
-//        $userId = request()->get('user_id');
-//        var_dump($code, $expiresIn, $userId);
-//        resolve('botman')->say('Authorized user ' . $userId, 121010156, TelegramDriver::class);
-//        $data = new VkPost;
-//        $data->VkId = $userId;
-//        $data->VkToken = $code;
-//        $data->save();
-//    }
 }

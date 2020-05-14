@@ -15,4 +15,13 @@ class VkFeed extends Model
         'post_json',
         'md5_hash_post'
     ];
+
+    protected $casts = [
+        'post_json' => 'array'
+    ];
+
+    public function user()
+    {
+        return $this->belongsTo(VkOauth::class, 'telegram_id', 'telegram_id');
+    }
 }
