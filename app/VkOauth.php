@@ -4,7 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class VkPost extends Model
+class VkOauth extends Model
 {
     protected $table = 'vk_oauth';
 
@@ -15,4 +15,9 @@ class VkPost extends Model
         'vk_id',
         'telegram_id'
     ];
+
+    public function posts()
+    {
+        return $this->hasMany(VkFeed::class, 'telegram_id', 'telegram_id');
+    }
 }
