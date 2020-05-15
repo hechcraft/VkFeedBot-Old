@@ -88,7 +88,7 @@ class FetchPosts extends Command
     private function savePosts(array $posts, VkOauth $user)
     {
         foreach ($posts as $post) {
-            $md5 = Hasher::makeFromPost($post->date, $post->text ?? '');
+            $md5 = Hasher::makeFromPost($post->date, $post->text ?? ' ');
 
             $vkFeed = new VkFeed([
                 'telegram_id' => $this->telegramId,
@@ -100,11 +100,12 @@ class FetchPosts extends Command
                 return;
             }
 
-            $user->last_post_id = $md5;
-            $user->save();
-
             $vkFeed->save();
         }
+
+        $md5HashFirstPost = Hasher::makeFromPost($posts[0]->date, $posts[0]->text ?? ' ');
+        $user->last_post_id = $md5HashFirstPost;
+        $user->save();
     }
 }
 
