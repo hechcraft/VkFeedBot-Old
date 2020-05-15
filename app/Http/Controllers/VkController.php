@@ -42,7 +42,7 @@ class VkController extends Controller
             return;
         }
 
-        if ($vkData->vk_id == $parseUrl['user_id'] || $vkData->telegram_id == $bot->getUser()->getId()) {
+        if ($vkData && ($vkData == $parseUrl['user_id'] || $vkData->telegram_id == $bot->getUser()->getId())) {
             $bot->reply('Вы уже зарегистрированы');
             return;
         }
