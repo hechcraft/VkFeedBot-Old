@@ -17,20 +17,17 @@ class SendPost implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    /** @var VkFeed */
-    public $post;
-
     protected $botman;
-
+    public $posts;
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct($id)
+    public function __construct($chunk)
     {
         $this->botman = resolve('botman');
-        $this->post = VkFeed::where('id', $id)->first();
+        $this->posts = VkFeed::whereIn('id', $chunk)->get();
     }
 
     /**
@@ -41,17 +38,17 @@ class SendPost implements ShouldQueue
      */
     public function handle()
     {
-        if (!$this->post) {
+        if (!$this->posts) {
             return;
         }
-        $user = $this->post->user;
+        $user = $this->posts->first()->user;
 
-        $messages = PostFactory::make($this->post->post_json, $user->telegram_id);
-
-        $messages->each(function ($message) use ($user) {
-            $this->botman->say($message->getMessage(), $user->telegram_id, TelegramDriver::class);
-        });
-
-        $this->post->delete();
+        foreach ($this->posts as $post) {
+            $messages = PostFactory::make($post->post_json, $user->telegram_id);
+            $messages->each(function ($message) use ($user) {
+                $this->botman->say($message->getMessage(), $user->telegram_id, TelegramDriver::class);
+            });
+            $post->delete();
+        }
     }
 }

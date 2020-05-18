@@ -2,13 +2,18 @@
 
 namespace App\Console\Commands;
 
+use App\Import;
+use App\Jobs\FetchFeed;
 use App\Jobs\SendPost;
 use App\Post\PostFactory;
+use App\VkFeed;
 use App\VkGroupName;
 use App\VkOauth;
 use App\VkUserName;
 use BotMan\Drivers\Telegram\TelegramDriver;
 use Illuminate\Console\Command;
+use Illuminate\Foundation\Bus\DispatchesJobs;
+
 
 class SendPosts extends Command
 {
@@ -43,16 +48,14 @@ class SendPosts extends Command
      */
     public function handle()
     {
-        $users = VkOauth::with('posts')->get();
-
-        foreach ($users as $user) {
-            foreach ($user->posts as $post) {
-                SendPost::dispatch($post->id);
+        $imports = Import::with(['groups', 'users', 'posts'])->get();
+        foreach ($imports as $import) {
+            foreach ($import->posts->chunk(20) as $chunk) {
+                SendPost::dispatch($chunk->pluck('id'));
             }
-
-            if (!$user->posts()->count()) {
-                VkUserName::where('telegram_id', $user->telegram_id)->delete();
-                VkGroupName::where('telegram_id', $user->telegram_id)->delete();
+            if (!$import->posts()->count()) {
+                $import->users()->delete();
+                $import->groups()->delete();
             }
         }
     }

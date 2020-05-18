@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Jobs\FetchFeed;
 use App\Services\Hasher;
 use App\VkFeed;
 use App\VkGroupName;
@@ -25,8 +26,6 @@ class FetchPosts extends Command
      */
     protected $description = 'This command fetches posts';
 
-    protected $telegramId;
-
     /**
      * Create a new command instance.
      *
@@ -45,67 +44,10 @@ class FetchPosts extends Command
 
     public function handle()
     {
-        VkOauth::all()
-            ->each(function ($user) {
-                $vkToken = $user->vk_token;
-                $telegramId = $user->telegram_id;
-
-                $this->telegramId = $telegramId;
-
-                $vkUrl = config('services.vk.url') . $vkToken;
-                $response = json_decode(file_get_contents($vkUrl));
-
-                $this->saveGroups(data_get($response, 'response.groups'));
-                $this->saveUsers(data_get($response, 'response.profiles'));
-                $this->savePosts(data_get($response, 'response.items'), $user);
+        VkOauth::pluck('id')
+            ->each(function ($id) {
+                FetchFeed::dispatch($id);
             });
-    }
-
-    private function saveGroups(array $groups = [])
-    {
-        foreach ($groups as $group) {
-            $groupName = new VkGroupName([
-                'telegram_id' => $this->telegramId,
-                'vk_id_group' => $group->id,
-                'vk_group_name' => $group->name,
-            ]);
-            $groupName->save();
-        }
-    }
-
-    private function saveUsers(array $users = [])
-    {
-        foreach ($users as $user) {
-            $userName = new VkUserName([
-                'telegram_id' => $this->telegramId,
-                'vk_id_user' => $user->id,
-                'vk_name_user' => $user->first_name . ' ' . $user->last_name,
-            ]);
-            $userName->save();
-        }
-    }
-
-    private function savePosts(array $posts, VkOauth $user)
-    {
-        foreach ($posts as $post) {
-            $md5 = Hasher::makeFromPost($post->date, $post->text ?? ' ');
-
-            $vkFeed = new VkFeed([
-                'telegram_id' => $this->telegramId,
-                'post_json' => $post,
-                'md5_hash_post' => $md5,
-            ]);
-
-            if ($user->last_post_id === $md5) {
-                return;
-            }
-
-            $vkFeed->save();
-        }
-
-        $md5HashFirstPost = Hasher::makeFromPost($posts[0]->date, $posts[0]->text ?? ' ');
-        $user->last_post_id = $md5HashFirstPost;
-        $user->save();
     }
 }
 

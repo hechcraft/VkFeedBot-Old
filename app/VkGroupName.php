@@ -13,6 +13,12 @@ class VkGroupName extends Model
     protected $fillable = [
         'vk_group_name',
         'vk_id_group',
-        'telegram_id'
+        'telegram_id',
+        'import_id'
     ];
+
+    public function import()
+    {
+        return $this->belongsTo(Import::class);
+    }
 }

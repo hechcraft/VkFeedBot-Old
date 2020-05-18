@@ -13,7 +13,8 @@ class VkFeed extends Model
     protected $fillable = [
         'telegram_id',
         'post_json',
-        'md5_hash_post'
+        'md5_hash_post',
+        'import_id'
     ];
 
     protected $casts = [
@@ -23,5 +24,10 @@ class VkFeed extends Model
     public function user()
     {
         return $this->belongsTo(VkOauth::class, 'telegram_id', 'telegram_id');
+    }
+
+    public function import()
+    {
+        return $this->belongsTo(Import::class);
     }
 }

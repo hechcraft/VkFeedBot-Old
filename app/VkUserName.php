@@ -13,6 +13,12 @@ class VkUserName extends Model
     protected $fillable = [
         'vk_name_user',
         'vk_id_user',
-        'telegram_id'
+        'telegram_id',
+        'import_id'
     ];
+
+    public function import()
+    {
+        return $this->belongsTo(Import::class);
+    }
 }

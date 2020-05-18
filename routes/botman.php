@@ -23,8 +23,9 @@ $botman->hears('/start', function ($bot) {
 $botman->hears('/start', 'App\Http\Controllers\VkController@start');
 >>>>>>> efa6e3c... New feature and bug fix
 
-$botman->hears('/delete',  '\App\Http\Controllers\VkController@delete');
+$botman->hears('/delete', '\App\Http\Controllers\VkController@delete');
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 =======
 $botman->hears('1', function ($bot) use ($botman) {
@@ -53,3 +54,19 @@ https://oauth.vk.com/authorize?client_id=7108999&display=page&redirect_uri=https
 =======
 $botman->hears('Url {stringUrl}', 'App\Http\Controllers\VkController@store');
 >>>>>>> efa6e3c... New feature and bug fix
+=======
+$botman->hears('/url {stringUrl}', 'App\Http\Controllers\VkController@store');
+
+$botman->hears('/help', function ($bot) {
+    $bot->reply("Для прохождения регистрации необходимо выполнить следующие действия: 
+    1) Написать боту /start;
+    2) Перейти по полученной ссылке;
+    3) Скопировать URL из адресной строки вашего браузера;
+    4) Написать команду /URL и через пробел вставить скопированный URL
+    
+    Для удаление вваших данных из бота воспользуйтесь командой /delete.
+    
+    P.S. Важно. По поводу предупреждения VK чтобы не передавать код, действительно узнав код можно получить много данных с аккаунта. Но в данном случае разрешение выдается только на те вещи, которые нужны для просмотра Вашей стены и не более.
+");
+});
+>>>>>>> 078375d... WIP

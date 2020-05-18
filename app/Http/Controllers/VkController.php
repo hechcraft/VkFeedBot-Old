@@ -63,10 +63,15 @@ class VkController extends Controller
 
     public function delete($bot)
     {
-        VkOauth::where('telegram_id', $bot->getUser()->getId())->delete();
-        VkFeed::where('telegram_id', $bot->getUser()->getId())->delete();
-        VkGroupName::where('telegram_id', $bot->getUser()->getId())->delete();
-        VkUserName::where('telegram_id', $bot->getUser()->getId())->delete();
-        $bot->reply('Ваши данные успешно удалены');
+        $user = VkOauth::where('telegram_id', $bot->getUser()->getId())->first();
+        if (is_null($user)) {
+            $bot->reply('Пользователя с такими данными не существует');
+        } else {
+            $user->delete();
+            VkFeed::where('telegram_id', $bot->getUser()->getId())->delete();
+            VkGroupName::where('telegram_id', $bot->getUser()->getId())->delete();
+            VkUserName::where('telegram_id', $bot->getUser()->getId())->delete();
+            $bot->reply('Ваши данные успешно удалены');
+        }
     }
 }
