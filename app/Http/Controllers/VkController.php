@@ -48,6 +48,7 @@ class VkController extends Controller
         }
         $data->vk_token = $parseUrl['https://oauth_vk_com/blank_html#access_token'];
         $data->vk_id = $parseUrl['user_id'];
+        $data->posts_md5 = NULL;
         $data->save();
 
         $name = 'https://api.vk.com/method/users.get?&user_ids=' . $parseUrl['user_id'] .

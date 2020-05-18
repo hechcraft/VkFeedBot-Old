@@ -81,21 +81,26 @@ class FetchFeed implements ShouldQueue
     private function savePosts(array $posts, VkOauth $user)
     {
         $countPosts = 0;
-        $allMd5 = collect([]);
-        $userMd5s = unserialize($user->all_md5);
+        $postsMd5 = collect([]);
+        if (!is_null($user->posts_md5)) {
+            $userMd5s = unserialize($user->posts_md5);
+        }
         foreach ($posts as $post) {
             $md5 = Hasher::makeFromPost($post->date, $post->text ?? ' ');
 
-            $allMd5->push($md5);
+            $postsMd5->push($md5);
 
-            foreach ($userMd5s as $postMd5) {
-                if ($postMd5 === $md5) {
-                    $this->import->posts_count = $countPosts;
-                    $this->import->save();
+            if (!is_null($user->posts_md5)) {
+                \Log::info(print_r('$value', true));
+                foreach ($userMd5s as $postMd5) {
+                    if ($postMd5 === $md5) {
+                        $this->import->posts_count = $countPosts;
+                        $this->import->save();
 
-                    $user->all_md5 = serialize($allMd5);
-                    $user->save();
-                    return true;
+                        $user->posts_md5 = serialize($postsMd5);
+                        $user->save();
+                        return true;
+                    }
                 }
             }
 
@@ -114,6 +119,10 @@ class FetchFeed implements ShouldQueue
             }
 
             $vkFeed->save();
+        }
+        if (is_null($user->posts_md5)) {
+            $user->posts_md5 = serialize($postsMd5);
+            $user->save();
         }
         $this->import->posts_count = $countPosts;
         $this->import->save();
