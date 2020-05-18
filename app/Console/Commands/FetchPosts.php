@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Import;
 use App\Jobs\FetchFeed;
 use App\Services\Hasher;
 use App\VkFeed;

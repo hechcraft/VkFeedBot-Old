@@ -41,11 +41,16 @@ class FetchFeed implements ShouldQueue
      */
     public function handle()
     {
+        if (is_null(Import::where('telegram_id', $this->user->telegram_id)->first())) {
+            $vkUrl = config('services.vk.startUrl') . $this->user->vk_token;
+        } else {
+            $vkUrl = config('services.vk.url') . $this->user->vk_token;
+        }
+        $response = json_decode(file_get_contents($vkUrl));
+
         $this->import = Import::create([
             'telegram_id' => $this->user->telegram_id,
         ]);
-        $vkUrl = config('services.vk.url') . $this->user->vk_token;
-        $response = json_decode(file_get_contents($vkUrl));
         $this->saveGroups(data_get($response, 'response.groups', []));
         $this->saveUsers(data_get($response, 'response.profiles', []));
         $this->savePosts(data_get($response, 'response.items', []), $this->user);
@@ -75,10 +80,17 @@ class FetchFeed implements ShouldQueue
 
     private function savePosts(array $posts, VkOauth $user)
     {
-        $lastIdSaved = false;
+        $firstIdSaved = false;
         $countPosts = 0;
+        $firstIdMd5 = '';
         foreach ($posts as $post) {
             $md5 = Hasher::makeFromPost($post->date, $post->text ?? ' ');
+
+            if (!$firstIdSaved && $post->type != 'wall_photo') {
+                $firstIdMd5 = $md5;
+                $firstIdSaved = true;
+            }
+
 
             $vkFeed = new VkFeed([
                 'telegram_id' => $this->user->telegram_id,
@@ -90,20 +102,32 @@ class FetchFeed implements ShouldQueue
             if ($user->last_post_id === $md5) {
                 $this->import->posts_count = $countPosts;
                 $this->import->save();
+
+                $user->last_post_id = $firstIdMd5;
+                $user->save();
+
                 return true;
             }
 
             $countPosts++;
 
-            if (!$lastIdSaved && $post->type != 'wall_photo') {
-                $user->last_post_id = $md5;
-                $user->save();
-                $lastIdSaved = true;
+            if ($countPosts === 0 || is_null($countPosts)) {
+                $this->import->posts_count = $countPosts;
+                $this->import->delete();
             }
 
             $vkFeed->save();
         }
         $this->import->posts_count = $countPosts;
         $this->import->save();
+
+        foreach ($posts as $post) {
+            if ($post->type != 'wall_photo') {
+                $md5 = Hasher::makeFromPost($post->date, $post->text ?? ' ');
+                $user->last_post_id = $md5;
+                $user->save();
+                break;
+            }
+        }
     }
 }

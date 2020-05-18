@@ -42,8 +42,7 @@ class SendPost implements ShouldQueue
             return;
         }
         $user = $this->posts->first()->user;
-
-        foreach ($this->posts as $post) {
+        foreach ($this->posts->sortKeysDesc() as $post) {
             $messages = PostFactory::make($post->post_json, $user->telegram_id);
             $messages->each(function ($message) use ($user) {
                 $this->botman->say($message->getMessage(), $user->telegram_id, TelegramDriver::class);
