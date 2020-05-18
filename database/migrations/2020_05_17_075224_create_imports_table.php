@@ -24,18 +24,6 @@ class CreateImportsTable extends Migration
             $table->integer('posts_count')->nullable();
             $table->timestamps();
         });
-
-        Schema::table('vk_feed', function (Blueprint $table) {
-            $table->unsignedInteger('import_id');
-        });
-
-        Schema::table('vk_group_name', function (Blueprint $table) {
-            $table->unsignedInteger('import_id');
-        });
-
-        Schema::table('vk_user_name', function (Blueprint $table) {
-            $table->unsignedInteger('import_id');
-        });
     }
 
     /**
@@ -46,17 +34,5 @@ class CreateImportsTable extends Migration
     public function down()
     {
         Schema::dropIfExists('imports');
-
-        Schema::table('vk_feed', function (Blueprint $table) {
-            $table->dropColumn('import_id');
-        });
-
-        Schema::table('vk_group_name', function (Blueprint $table) {
-            $table->dropColumn('import_id');
-        });
-
-        Schema::table('vk_user_name', function (Blueprint $table) {
-            $table->dropColumn('import_id');
-        });
     }
 }

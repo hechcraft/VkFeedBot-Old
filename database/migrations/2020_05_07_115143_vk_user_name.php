@@ -18,6 +18,7 @@ class VkUserName extends Migration
             $table->string('telegram_id');
             $table->string('vk_id_user');
             $table->string('vk_name_user');
+            $table->unsignedInteger('import_id');
         });
     }
 

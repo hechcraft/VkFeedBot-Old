@@ -18,6 +18,7 @@ class VkGroupName extends Migration
             $table->string('telegram_id');
             $table->string('vk_id_group');
             $table->string('vk_group_name');
+            $table->unsignedInteger('import_id');
         });
     }
 

@@ -80,17 +80,24 @@ class FetchFeed implements ShouldQueue
 
     private function savePosts(array $posts, VkOauth $user)
     {
-        $firstIdSaved = false;
         $countPosts = 0;
-        $firstIdMd5 = '';
+        $allMd5 = collect([]);
+        $userMd5s = unserialize($user->all_md5);
         foreach ($posts as $post) {
             $md5 = Hasher::makeFromPost($post->date, $post->text ?? ' ');
 
-            if (!$firstIdSaved && $post->type != 'wall_photo') {
-                $firstIdMd5 = $md5;
-                $firstIdSaved = true;
-            }
+            $allMd5->push($md5);
 
+            foreach ($userMd5s as $postMd5) {
+                if ($postMd5 === $md5) {
+                    $this->import->posts_count = $countPosts;
+                    $this->import->save();
+
+                    $user->all_md5 = serialize($allMd5);
+                    $user->save();
+                    return true;
+                }
+            }
 
             $vkFeed = new VkFeed([
                 'telegram_id' => $this->user->telegram_id,
@@ -98,16 +105,6 @@ class FetchFeed implements ShouldQueue
                 'md5_hash_post' => $md5,
                 'import_id' => $this->import->id,
             ]);
-
-            if ($user->last_post_id === $md5) {
-                $this->import->posts_count = $countPosts;
-                $this->import->save();
-
-                $user->last_post_id = $firstIdMd5;
-                $user->save();
-
-                return true;
-            }
 
             $countPosts++;
 
@@ -120,14 +117,5 @@ class FetchFeed implements ShouldQueue
         }
         $this->import->posts_count = $countPosts;
         $this->import->save();
-
-        foreach ($posts as $post) {
-            if ($post->type != 'wall_photo') {
-                $md5 = Hasher::makeFromPost($post->date, $post->text ?? ' ');
-                $user->last_post_id = $md5;
-                $user->save();
-                break;
-            }
-        }
     }
 }

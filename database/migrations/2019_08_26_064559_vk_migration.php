@@ -18,8 +18,8 @@ class VkMigration extends Migration
             $table->string('vk_token');
             $table->string('vk_id');
             $table->string('telegram_id');
-            $table->string('last_post_id')->default('0');
-            $table->unique(['vk_id', 'telegram_id', 'last_post_id']);
+            $table->longText('all_md5')->nullable();
+            $table->unique(['vk_id', 'telegram_id']);
         });
     }
 
