@@ -81,28 +81,9 @@ class FetchFeed implements ShouldQueue
     private function savePosts(array $posts, VkOauth $user)
     {
         $countPosts = 0;
-        $postsMd5 = collect([]);
-        if (!is_null($user->posts_md5)) {
-            $userMd5s = unserialize($user->posts_md5);
-        }
+        $postsMd5 = $this->user->posts()->pluck('md5_hash_post');
         foreach ($posts as $post) {
             $md5 = Hasher::makeFromPost($post->date, $post->text ?? ' ');
-
-            $postsMd5->push($md5);
-
-            if (!is_null($user->posts_md5)) {
-                \Log::info(print_r('$value', true));
-                foreach ($userMd5s as $postMd5) {
-                    if ($postMd5 === $md5) {
-                        $this->import->posts_count = $countPosts;
-                        $this->import->save();
-
-                        $user->posts_md5 = serialize($postsMd5);
-                        $user->save();
-                        return true;
-                    }
-                }
-            }
 
             $vkFeed = new VkFeed([
                 'telegram_id' => $this->user->telegram_id,
@@ -113,16 +94,19 @@ class FetchFeed implements ShouldQueue
 
             $countPosts++;
 
+            if ($postsMd5->contains($md5)) {
+                $this->import->posts_count = $countPosts;
+                $this->import->save();
+
+                $user->save();
+                return true;
+            }
+
             if ($countPosts === 0 || is_null($countPosts)) {
                 $this->import->posts_count = $countPosts;
                 $this->import->delete();
             }
-
             $vkFeed->save();
-        }
-        if (is_null($user->posts_md5)) {
-            $user->posts_md5 = serialize($postsMd5);
-            $user->save();
         }
         $this->import->posts_count = $countPosts;
         $this->import->save();

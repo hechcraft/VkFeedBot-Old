@@ -5,7 +5,12 @@ namespace App\Console;
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+use App\Console\Commands\CleanUpDataBase;
+use App\Console\Commands\ClearDataBase;
+>>>>>>> f1450d6... WIP
 use App\Console\Commands\FetchPosts;
 use App\Console\Commands\SendPosts;
 >>>>>>> 7325e42... WIP
@@ -56,7 +61,14 @@ class Kernel extends ConsoleKernel
 =======
         $schedule->command('posts:fetch')->everyMinute();
         $schedule->command('posts:send')->everyMinute();
+<<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> 7325e42... WIP
+=======
+        $schedule->command('posts:cleanup')->dailyAt('1:00');
+>>>>>>> f1450d6... WIP
+=======
+>>>>>>> 6dc1906... WIP
     }
 
     /**

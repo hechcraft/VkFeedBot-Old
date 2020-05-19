@@ -47,7 +47,8 @@ class SendPost implements ShouldQueue
             $messages->each(function ($message) use ($user) {
                 $this->botman->say($message->getMessage(), $user->telegram_id, TelegramDriver::class);
             });
-            $post->delete();
+            $post->post_json = '';
+            $post->save();
         }
     }
 }

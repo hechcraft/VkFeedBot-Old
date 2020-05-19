@@ -48,15 +48,17 @@ class SendPosts extends Command
      */
     public function handle()
     {
+        $postsId = collect([]);
         $imports = Import::with(['groups', 'users', 'posts'])->get();
         foreach ($imports as $import) {
-            foreach ($import->posts->chunk(20) as $chunk) {
-                SendPost::dispatch($chunk->pluck('id'));
+            foreach ($import->posts->pluck('post_json', 'id') as $id => $postJson) {
+                if ($postJson != '') {
+                    $postsId->push($id);
+                }
             }
-            if (!$import->posts()->count()) {
-                $import->users()->delete();
-                $import->groups()->delete();
-            }
+        }
+        foreach ($postsId->chunk(10) as $chunk) {
+            SendPost::dispatch($chunk);
         }
     }
 }
