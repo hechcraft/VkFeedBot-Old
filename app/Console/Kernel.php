@@ -60,6 +60,7 @@ class Kernel extends ConsoleKernel
 >>>>>>> 4cbee79... 4
 =======
         $schedule->command('posts:fetch')->everyMinute();
+<<<<<<< HEAD
         $schedule->command('posts:send')->everyMinute();
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -69,6 +70,10 @@ class Kernel extends ConsoleKernel
 >>>>>>> f1450d6... WIP
 =======
 >>>>>>> 6dc1906... WIP
+=======
+	$schedule->command('posts:send')->everyMinute();
+	$schedule->command('horizon:snapshot')->everyFiveMinutes();
+>>>>>>> 8baec8f... Add snapshots
     }
 
     /**
