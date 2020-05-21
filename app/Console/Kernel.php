@@ -34,6 +34,7 @@ class Kernel extends ConsoleKernel
     protected $commands = [
         FetchPosts::class,
         SendPosts::class,
+        CleanUpDataBase::class,
     ];
 
     /**
@@ -73,7 +74,11 @@ class Kernel extends ConsoleKernel
 =======
 	$schedule->command('posts:send')->everyMinute();
 	$schedule->command('horizon:snapshot')->everyFiveMinutes();
+<<<<<<< HEAD
 >>>>>>> 8baec8f... Add snapshots
+=======
+        $schedule->command('posts:cleanup')->monthlyOn(1, '15:00');
+>>>>>>> 4ab34ad... WIP
     }
 
     /**
