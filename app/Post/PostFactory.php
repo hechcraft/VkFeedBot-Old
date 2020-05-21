@@ -13,7 +13,7 @@ class PostFactory
         if (!is_null($geoType)) {
             $type = $geoType;
         } elseif (!isset($post['attachments'])) {
-            $type = $post['type'];
+            $type = data_get($post, 'type');
         } else {
             $type = data_get($post, 'attachments.0.type');
         }

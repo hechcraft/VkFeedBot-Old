@@ -41,13 +41,12 @@ class SendPost implements ShouldQueue
         if (!$this->posts) {
             return;
         }
-        $user = $this->posts->first()->user;
         foreach ($this->posts->sortKeysDesc() as $post) {
-            $messages = PostFactory::make($post->post_json, $user->telegram_id);
-            $messages->each(function ($message) use ($user) {
-                $this->botman->say($message->getMessage(), $user->telegram_id, TelegramDriver::class);
+            $messages = PostFactory::make($post->post_json, $post->telegram_id);
+            $messages->each(function ($message) use ($post) {
+                $this->botman->say($message->getMessage(), $post->telegram_id, TelegramDriver::class);
             });
-            $post->post_json = '';
+            $post->post_json = "false";
             $post->save();
         }
     }

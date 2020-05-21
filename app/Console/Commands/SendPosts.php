@@ -13,6 +13,7 @@ use App\VkUserName;
 use BotMan\Drivers\Telegram\TelegramDriver;
 use Illuminate\Console\Command;
 use Illuminate\Foundation\Bus\DispatchesJobs;
+use Illuminate\Support\Facades\DB;
 
 
 class SendPosts extends Command
@@ -51,12 +52,20 @@ class SendPosts extends Command
         $postsId = collect([]);
         $imports = Import::with(['groups', 'users', 'posts'])->get();
         foreach ($imports as $import) {
-            foreach ($import->posts->pluck('post_json', 'id') as $id => $postJson) {
+            foreach ($import->posts->where('post_json', '!=', 'false')
+                         ->pluck('post_json', 'id') as $id => $postJson) {
+
                 if ($postJson != '') {
                     $postsId->push($id);
                 }
             }
+
+//            if (!$import->posts()->where('post_json', '!=', 'false')->count()){
+//                $import->users()->delete();
+//                $import->groups()->delete();
+//            }
         }
+
         foreach ($postsId->chunk(10) as $chunk) {
             SendPost::dispatch($chunk);
         }

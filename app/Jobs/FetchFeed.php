@@ -42,9 +42,9 @@ class FetchFeed implements ShouldQueue
     public function handle()
     {
         if (is_null(Import::where('telegram_id', $this->user->telegram_id)->first())) {
-            $vkUrl = config('services.vk.startUrl') . $this->user->vk_token;
+            $vkUrl = str_replace('postsAmount', 10, config('services.vk.url')) . $this->user->vk_token;
         } else {
-            $vkUrl = config('services.vk.url') . $this->user->vk_token;
+            $vkUrl = str_replace('postsAmount', 100, config('services.vk.url')) . $this->user->vk_token;
         }
         $response = json_decode(file_get_contents($vkUrl));
 
