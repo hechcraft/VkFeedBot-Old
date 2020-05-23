@@ -39,12 +39,10 @@ class CleanupDataBase extends Command
      */
     public function handle()
     {
-
         $imports = Import::with('posts')
             ->whereBetween('created_at', [Carbon::now()->startOfMonth()->subMonth(2),
                 Carbon::now()->startOfMonth()->subMonth(1)])
             ->get();
-        \Log::info(print_r($imports, true));
         foreach ($imports as $import) {
             $import->posts()->delete();
             $import->delete();

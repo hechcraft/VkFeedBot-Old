@@ -59,11 +59,6 @@ class SendPosts extends Command
                     $postsId->push($id);
                 }
             }
-
-            if (!$import->posts()->where('post_json', '!=', 'false')->count()) {
-                $import->users()->delete();
-                $import->groups()->delete();
-            }
         }
 
         foreach ($postsId->chunk(10) as $chunk) {

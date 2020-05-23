@@ -24,26 +24,14 @@ class VkPost
         if ($idPost < 0) {
             $idPost *= -1;
         }
-        $groupsData = VkGroupName::select('vk_id_group', 'vk_group_name')
-            ->where('telegram_id', $this->telegramId)->get();
 
-        $profilesData = VkUserName::select('vk_id_user', 'vk_name_user')
-            ->where('telegram_id', $this->telegramId)->get();
+        $groupsData = VkGroupName::pluck('vk_group_name', 'vk_id_group');
+        $profilesData = VkUserName::pluck('vk_name_user', 'vk_id_user');
 
-        foreach ($groupsData as $group) {
-            if ($idPost == $group->vk_id_group) {
-                $name = $group->vk_group_name;
-                $text = $name . ":\n" . $text;
-                break;
-            }
-        }
-
-        foreach ($profilesData as $user) {
-            if ($idPost == $user->vk_id_user) {
-                $name = $user->vk_name_user;
-                $text = $name . ":\n" . $text;
-                break;
-            }
+        if ($name = data_get($groupsData, $idPost)) {
+            $text = $name . ":\n" . $text;
+        } else if ($name = data_get($profilesData, $idPost)) {
+            $text = $name . ":\n" . $text;
         }
 
         return $text;

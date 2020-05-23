@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\DB;
 
 class VkController extends Controller
 {
-    //ссылка на регистрацию
+
     public function start($bot)
     {
         $bot->reply(
@@ -69,8 +69,6 @@ class VkController extends Controller
         } else {
             $user->delete();
             VkFeed::where('telegram_id', $bot->getUser()->getId())->delete();
-            VkGroupName::where('telegram_id', $bot->getUser()->getId())->delete();
-            VkUserName::where('telegram_id', $bot->getUser()->getId())->delete();
             $bot->reply('Ваши данные успешно удалены');
         }
     }

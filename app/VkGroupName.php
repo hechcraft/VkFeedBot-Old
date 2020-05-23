@@ -13,7 +13,6 @@ class VkGroupName extends Model
     protected $fillable = [
         'vk_group_name',
         'vk_id_group',
-        'telegram_id',
         'import_id'
     ];
 

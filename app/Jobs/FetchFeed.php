@@ -13,7 +13,6 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
-use Illuminate\Support\Facades\Log;
 
 class FetchFeed implements ShouldQueue
 {
@@ -38,6 +37,7 @@ class FetchFeed implements ShouldQueue
      * Execute the job.
      *
      * @return void
+     * @throws \Exception
      */
     public function handle()
     {
@@ -51,34 +51,51 @@ class FetchFeed implements ShouldQueue
         $this->import = Import::create([
             'telegram_id' => $this->user->telegram_id,
         ]);
+        $count = $this->savePosts(data_get($response, 'response.items', []));
+
+        if (!$count) {
+            $this->import->delete();
+            return;
+        }
+
+        $this->import->posts_count = $count;
+        $this->import->save();
+
         $this->saveGroups(data_get($response, 'response.groups', []));
         $this->saveUsers(data_get($response, 'response.profiles', []));
-        $this->savePosts(data_get($response, 'response.items', []), $this->user);
     }
 
     private function saveGroups(array $groups = [])
     {
+        $existingGroups = VkGroupName::pluck('vk_id_group');
         foreach ($groups as $group) {
-            $this->import->groups()->create([
-                'telegram_id' => $this->user->telegram_id,
-                'vk_id_group' => $group->id,
-                'vk_group_name' => $group->name,
-            ]);
+            if (!$existingGroups->contains($group->id)) {
+                $this->import->groups()->create([
+                    'vk_id_group' => $group->id,
+                    'vk_group_name' => $group->name,
+                ]);
+
+                $existingGroups->push($group->id);
+            }
         }
     }
 
     private function saveUsers(array $users = [])
     {
+        $existingUsers = VkUserName::pluck('vk_id_user');
         foreach ($users as $user) {
-            $this->import->users()->create([
-                'telegram_id' => $this->user->telegram_id,
-                'vk_id_user' => $user->id,
-                'vk_name_user' => $user->first_name . ' ' . $user->last_name,
-            ]);
+            if (!$existingUsers->contains($user->id)) {
+                $this->import->users()->create([
+                    'vk_id_user' => $user->id,
+                    'vk_name_user' => $user->first_name . ' ' . $user->last_name,
+                ]);
+
+                $existingUsers->push($user->id);
+            }
         }
     }
 
-    private function savePosts(array $posts, VkOauth $user)
+    private function savePosts(array $posts)
     {
         $countPosts = 0;
         $postsMd5 = $this->user->posts()->pluck('md5_hash_post');
@@ -92,23 +109,17 @@ class FetchFeed implements ShouldQueue
                 'import_id' => $this->import->id,
             ]);
 
-            $countPosts++;
-
             if ($postsMd5->contains($md5)) {
                 $this->import->posts_count = $countPosts;
                 $this->import->save();
-
-                $user->save();
                 return true;
             }
 
-            if ($countPosts === 0 || is_null($countPosts)) {
-                $this->import->posts_count = $countPosts;
-                $this->import->delete();
-            }
             $vkFeed->save();
+
+            $countPosts++;
         }
-        $this->import->posts_count = $countPosts;
-        $this->import->save();
+
+        return $countPosts;
     }
 }

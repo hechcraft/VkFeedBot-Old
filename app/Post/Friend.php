@@ -11,20 +11,11 @@ class Friend extends VkPost
 {
     public function getMessage()
     {
-        $userFullNmae = VkUserName::select('vk_id_user', 'vk_name_user')
-            ->where('telegram_id', $this->telegramId)->get();
+        $userFullName = VkUserName::pluck('vk_name_user', 'vk_id_user');
 
-        $fullNameUrFriend = '';
-        $fullNameAddFriend = '';
-        foreach ($userFullNmae as $userName) {
-            if ($userName->vk_id_user == $this->getIdUrFriend()) {
-                $fullNameUrFriend = $userName->vk_name_user;
-            }
+        $fullNameUrFriend = data_get($userFullName, $this->getIdUrFriend());
+        $fullNameAddFriend = data_get($userFullName, $this->getIdAddFriend());
 
-            if ($userName->vk_id_user == $this->getIdAddFriend()) {
-                $fullNameAddFriend = $userName->vk_name_user;
-            }
-        }
         return "$fullNameUrFriend добавил(а) в друзья $fullNameAddFriend";
     }
 }

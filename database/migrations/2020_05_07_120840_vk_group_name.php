@@ -15,7 +15,6 @@ class VkGroupName extends Migration
     {
         Schema::create('vk_group_name', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('telegram_id');
             $table->string('vk_id_group');
             $table->string('vk_group_name');
             $table->unsignedInteger('import_id');
