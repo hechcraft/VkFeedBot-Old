@@ -112,7 +112,7 @@ class FetchFeed implements ShouldQueue
             if ($postsMd5->contains($md5)) {
                 $this->import->posts_count = $countPosts;
                 $this->import->save();
-                return true;
+                return $countPosts;
             }
 
             $vkFeed->save();
