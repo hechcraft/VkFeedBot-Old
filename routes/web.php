@@ -20,47 +20,17 @@ Route::get('/', function () {
 Route::match(['get', 'post'], '/botman', 'BotManController@handle');
 Route::get('/botman/tinker', 'BotManController@tinker');
 
-<<<<<<< HEAD
 Route::get('/success', function () {
     if (!str_contains(request()->fullUrl(), 'redirected')) {
         return view('redirect');
     }
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 4cbee79... 4
     $code = request()->get('access_token');
     $expiresIn = request()->get('expires_in');
     $userId = request()->get('user_id');
     var_dump($code, $expiresIn, $userId);
     resolve('botman')->say('Authorized user ' . $userId, 121010156, TelegramDriver::class);
 });
-<<<<<<< HEAD
-=======
 
-    $code = request()->get('access_token');
-    $expiresIn = request()->get('expires_in');
-    $userId = request()->get('user_id');
-
-    var_dump($code, $expiresIn, $userId);
-
-    resolve('botman')->say('Authorized user ' . $userId, 77434259, TelegramDriver::class);
-});
->>>>>>> 8b01fdf... Царский подгон
-=======
->>>>>>> 4cbee79... 4
-=======
 Route::get('/success', 'VkController@store');
 
 
-//Route::get('/success',function () {
-//    if (!str_contains(request()->fullUrl(), 'redirected')) {
-//        return view('redirect');
-//    }
-//    $code = request()->get('access_token');
-//    $expiresIn = request()->get('expires_in');
-//    $userId = request()->get('user_id');
-//    var_dump($code, $expiresIn, $userId);
-//    resolve('botman')->say('Authorized user ' . $userId, 121010156, TelegramDriver::class);
-//});
->>>>>>> efa6e3c... New feature and bug fix
