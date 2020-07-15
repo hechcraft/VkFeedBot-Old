@@ -32,13 +32,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('inspire')
             ->hourly();
 
-        $schedule->job(new BotPost)->everyMinute();
-        $schedule->job(new HelloJob)->everyMinute();
-        $schedule->job(new BotPost)->everyMinute();
-
         $schedule->command('posts:fetch')->everyMinute();
-        $schedule->command('posts:send')->everyMinute();
-        $schedule->command('posts:cleanup')->dailyAt('1:00');
         $schedule->command('posts:send')->everyMinute();
 
         $schedule->command('horizon:snapshot')->everyFiveMinutes();
