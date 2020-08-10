@@ -32,10 +32,8 @@ class Message
      */
     public function withCaption($caption, $url)
     {
-        if (strlen($caption) > 1000) {
-            $caption = str_limit($caption, 850);
-            $caption .= "\n" . $url;
-        }
+        $caption = str_limit($caption, 850);
+        $caption .= "\n" . $url;
         $this->outgoingMessage->text($caption);
         return $this;
     }

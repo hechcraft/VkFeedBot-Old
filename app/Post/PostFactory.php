@@ -25,7 +25,6 @@ class PostFactory
                 $messages->push(new Video($post, $telegramId));
                 break;
             case 'audio':
-                $messages->push(new Audio($post, $telegramId));
                 break;
             case 'point':
                 $messages->push(new Point($post, $telegramId));
