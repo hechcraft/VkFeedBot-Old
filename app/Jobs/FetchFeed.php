@@ -100,7 +100,7 @@ class FetchFeed implements ShouldQueue
         $countPosts = 0;
         $postsMd5 = $this->user->posts()->pluck('md5_hash_post');
         foreach ($posts as $post) {
-            $md5 = Hasher::makeFromPost($post->date, $post->text ?? ' ');
+            $md5 = Hasher::makeFromPost($post);
 
             $vkFeed = new VkFeed([
                 'telegram_id' => $this->user->telegram_id,

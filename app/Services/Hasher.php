@@ -4,8 +4,8 @@ namespace App\Services;
 
 class Hasher
 {
-    public static function makeFromPost($date, $text)
+    public static function makeFromPost($post)
     {
-        return md5($date . $text);
+        return md5($post->source_id . $post->post_id);
     }
 }
