@@ -6,6 +6,7 @@ class Hasher
 {
     public static function makeFromPost($post)
     {
-        return md5($post->source_id . $post->post_id);
+        $postId = $post->post_id ?? $post->text;
+        return md5($post->source_id . $postId);
     }
 }
