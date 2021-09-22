@@ -16,7 +16,7 @@ return [
 
     'vk' => [
         'token' => env('VK_TOKEN'),
-        'url' => 'https://api.vk.com/method/newsfeed.get?&filters=posts&count=postsAmount&return_banned=0&v=5.52&access_token=',
+        'url' => 'https://api.vk.com/method/newsfeed.get?&filters=posts&count=postsAmount&return_banned=0&v=5.81&access_token=',
     ],
 
     'mailgun' => [
