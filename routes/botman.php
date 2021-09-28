@@ -5,7 +5,7 @@ $botman = resolve('botman');
 $botman->hears('/start', function ($bot) {
     $bot->reply(
         sprintf(
-            '<a href="https://oauth.vk.com/authorize?client_id=%s&display=page&redirect_uri=https://oauth.vk.com/blank.html&scope=%s&response_type=token&v=5.52">Authorize</a>',
+            '<a href="https://oauth.vk.com/authorize?client_id=%s&display=page&redirect_uri=https://oauth.vk.com/blank.html&scope=%s&response_type=token&v=5.81">Authorize</a>',
             '7111219',
             'offline,friends,wall'
         ),
@@ -23,7 +23,7 @@ $botman->hears('1', function ($bot) use ($botman) {
 $botman->hears('start', function ($bot) {
     $bot->reply(
         sprintf(
-            '<a href="https://oauth.vk.com/authorize?client_id=%s&display=page&redirect_uri=http://botman.test/success&scope=%s&response_type=token&v=5.52">Authorize</a>',
+            '<a href="https://oauth.vk.com/authorize?client_id=%s&display=page&redirect_uri=http://botman.test/success&scope=%s&response_type=token&v=5.81">Authorize</a>',
             '7109046',
             'offline'
         ), ['parse_mode' => 'HTML']

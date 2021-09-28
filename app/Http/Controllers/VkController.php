@@ -18,7 +18,7 @@ class VkController extends Controller
     {
         $bot->reply(
             sprintf(
-                '<a href="https://oauth.vk.com/authorize?client_id=%s&display=page&redirect_uri=https://oauth.vk.com/blank.html&scope=%s&response_type=token&v=5.52">Authorize</a>',
+                '<a href="https://oauth.vk.com/authorize?client_id=%s&display=page&redirect_uri=https://oauth.vk.com/blank.html&scope=%s&response_type=token&v=5.81">Authorize</a>',
                 '7111219',
                 'offline,friends,wall'
             ),
@@ -51,7 +51,7 @@ class VkController extends Controller
         $data->save();
 
         $name = 'https://api.vk.com/method/users.get?&user_ids=' . $parseUrl['user_id'] .
-            '&v=5.52&access_token=' . $parseUrl['https://oauth_vk_com/blank_html#access_token'];
+            '&v=5.81&access_token=' . $parseUrl['https://oauth_vk_com/blank_html#access_token'];
         $response = json_decode(file_get_contents($name));
         $firstName = data_get($response, 'response.0.first_name');
         $lastName = data_get($response, 'response.0.last_name');

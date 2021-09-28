@@ -6,7 +6,7 @@ class Hasher
 {
     public static function makeFromPost($post)
     {
-        $postId = $post->post_id ?? $post->text;
+        $postId = $post->post_id ?? $post->text ?? $post->date;
         if (!$postId){
             $postId = serialize($post);
         }
